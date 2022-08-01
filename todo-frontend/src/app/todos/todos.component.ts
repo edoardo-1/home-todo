@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Todo } from 'src/models/todo';
+import { TodoService } from 'src/services/todo.service';
 
 @Component({
   selector: 'app-todos',
@@ -7,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TodosComponent implements OnInit {
 
-  constructor() { }
+  constructor(private todoService : TodoService) { }
 
   ngOnInit(): void {
   }

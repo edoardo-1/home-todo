@@ -1,1 +1,7 @@
-<p>todos-body works!</p>
+<ul>
+    <li *ngFor="let todo of todoService.todos$ | async; index as i">
+        <input type="checkbox">
+        {{todo.isCompleted}}
+        {{todo.content}}
+    </li>
+</ul>
