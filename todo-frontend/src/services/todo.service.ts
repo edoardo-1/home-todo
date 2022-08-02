@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of} from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Todo } from 'src/models/todo';
 
 @Injectable({
@@ -22,8 +22,18 @@ export class TodoService {
     },
   ]);
 
-  addNewTodo(newContent : string): void {
-    let newId : number = ~~(Math.random() * 100000)
-    this.todos$.next([...this.todos$.getValue(), {id: newId, content: newContent, isCompleted: false }]);
+  addNewTodo(newContent: string): void {
+    let newId: number = ~~(Math.random() * 100000);
+    this.todos$.next([
+      ...this.todos$.getValue(),
+      { id: newId, content: newContent, isCompleted: false },
+    ]);
+  }
+
+  completeAll(): void {
+    const updatedTodos: Todo[] = this.todos$.getValue().map((todo) => {
+      return { ...todo, isCompleted: true };
+    });
+    this.todos$.next(updatedTodos);
   }
 }

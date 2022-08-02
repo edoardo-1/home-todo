@@ -15,4 +15,8 @@ export class TodosHeaderComponent {
     this.todoService.addNewTodo(this.addTodoBarText);
     this.addTodoBarText = '';
   }
+
+  completeAll() : void {
+    this.todoService.completeAll();
+  }
 }
