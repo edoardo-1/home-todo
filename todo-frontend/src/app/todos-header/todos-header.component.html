@@ -1,2 +1,5 @@
 <input #box type="text" [(ngModel)]="addTodoBarText" (keyup.enter)="addNewTodo()">
-<div class="complete-all" (click)="completeAll()">Complete all tasks</div>
+<div class="buttons">
+    <div class="complete-all" (click)="completeAll()">Complete all tasks</div>
+    <div class="clear-completed" (click)="clearCompleted()">Clear completed</div>
+</div>

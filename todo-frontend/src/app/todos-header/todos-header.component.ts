@@ -19,4 +19,8 @@ export class TodosHeaderComponent {
   completeAll() : void {
     this.todoService.completeAll();
   }
+
+  clearCompleted() : void {
+    this.todoService.clearCompleted();
+  }
 }

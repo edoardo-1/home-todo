@@ -20,6 +20,11 @@ export class TodoService {
       content: 'todo1',
       isCompleted: false,
     },
+    {
+      id: 3,
+      content: 'todo1',
+      isCompleted: true,
+    },
   ]);
 
   addNewTodo(newContent: string): void {
@@ -31,9 +36,16 @@ export class TodoService {
   }
 
   completeAll(): void {
-    const updatedTodos: Todo[] = this.todos$.getValue().map((todo) => {
+    let updatedTodos: Todo[] = this.todos$.getValue().map((todo) => {
       return { ...todo, isCompleted: true };
     });
+    this.todos$.next(updatedTodos);
+  }
+
+  clearCompleted(): void {
+    let updatedTodos: Todo[] = this.todos$
+      .getValue()
+      .filter((todo) => !todo.isCompleted);
     this.todos$.next(updatedTodos);
   }
 }

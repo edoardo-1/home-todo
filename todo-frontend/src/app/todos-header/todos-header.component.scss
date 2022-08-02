@@ -1,3 +1,7 @@
-.complete-all:hover {
+.complete-all:hover, .clear-completed:hover {
     color: gray;
+}
+.buttons {
+    display: flex;
+    justify-content: space-between;
 }
