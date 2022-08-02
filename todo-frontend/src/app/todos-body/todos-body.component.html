@@ -1,7 +1,9 @@
 <ul>
     <li *ngFor="let todo of todoService.todos$ | async; index as i">
-        <input type="checkbox">
-        {{todo.isCompleted}}
-        {{todo.content}}
+        <input type="checkbox" [checked]="todo.isCompleted">
+        <div>
+            {{todo.content}}
+        </div>
+        <span class="delete-button">delete</span>
     </li>
 </ul>

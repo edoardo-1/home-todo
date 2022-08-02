@@ -1,0 +1,12 @@
+li span.delete-button {
+    visibility: hidden;
+}
+li:hover span.delete-button {
+    visibility: visible;
+}
+ul li {
+    display: flex;
+}
+ul {
+    list-style-type: none;
+}

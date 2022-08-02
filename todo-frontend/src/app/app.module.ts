@@ -8,6 +8,7 @@ import { TodosBodyComponent } from './todos-body/todos-body.component';
 import { TodosHeaderComponent } from './todos-header/todos-header.component';
 import { TodosFooterComponent } from './todos-footer/todos-footer.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     TodosFooterComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule
