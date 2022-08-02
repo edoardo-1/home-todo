@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { Todo } from 'src/models/todo';
 import { TodoService } from 'src/services/todo.service';
 
@@ -8,8 +9,11 @@ import { TodoService } from 'src/services/todo.service';
   styleUrls: ['./todos-body.component.scss']
 })
 export class TodosBodyComponent {
+  todos$ : BehaviorSubject<Todo[]>;
 
-  constructor(public todoService : TodoService) { }
+  constructor(public todoService : TodoService) {
+    this.todos$ = todoService.todos$;
+   }
 
   deleteTodo(todo : Todo) : void {
     this.todoService.deleteTodo(todo);

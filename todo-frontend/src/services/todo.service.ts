@@ -55,4 +55,8 @@ export class TodoService {
       .filter((todo) => todo !== todoToDelete);
     this.todos$.next(updatedTodos);
   }
+
+  countUncompletedTasks(): number {
+    return this.todos$.getValue().filter((task) => !task.isCompleted).length || 0;
+  }
 }
