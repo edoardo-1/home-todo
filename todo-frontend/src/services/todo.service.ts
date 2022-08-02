@@ -57,6 +57,20 @@ export class TodoService {
   }
 
   countUncompletedTasks(): number {
-    return this.todos$.getValue().filter((task) => !task.isCompleted).length || 0;
+    return (
+      this.todos$.getValue().filter((task) => !task.isCompleted).length || 0
+    );
+  }
+
+  private switchCompleted(todo: Todo): void {
+    todo.isCompleted = !todo.isCompleted;
+  }
+
+  completeTodo(todoToComplete: Todo): void {
+    this.todos$
+      .getValue()
+      .map((todo) =>
+        todo === todoToComplete ? this.switchCompleted(todo) : todo
+      );
   }
 }
