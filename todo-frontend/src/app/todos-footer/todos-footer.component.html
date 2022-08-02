@@ -1,1 +1,6 @@
 <div>{{showTasksLeft()}}</div>
+<div class="todo-filters">
+    <div [class]="allFilter" (click)="getAllTodos()">All</div>
+    <div [class]="uncompletedFilter" (click)="displayUncompletedTodos()">Uncompleted</div>
+    <div [class]="completedFilter" (click)="displayCompletedTodos()">Completed</div>
+</div>

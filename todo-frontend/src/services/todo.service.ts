@@ -27,6 +27,26 @@ export class TodoService {
     },
   ]);
 
+  getAllTodos(): void {
+    this.getTodos.subscribe((data) => this.todos$.next(data));
+  }
+
+  displayUncompletedTodos(): void {
+    this.getAllTodos();
+    let updatedTodos = this.todos$
+      .getValue()
+      .filter((todo) => !todo.isCompleted);
+    this.todos$.next(updatedTodos);
+  }
+
+  displayCompletedTodos(): void {
+    this.getAllTodos();
+    let updatedTodos = this.todos$
+      .getValue()
+      .filter((todo) => todo.isCompleted);
+    this.todos$.next(updatedTodos);
+  }
+
   addNewTodo(newContent: string): void {
     let newId: number = ~~(Math.random() * 100000);
     this.todos$.next([

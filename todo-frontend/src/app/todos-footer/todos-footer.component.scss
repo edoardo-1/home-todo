@@ -1,0 +1,13 @@
+:host{
+    display: flex;
+    justify-content: space-between;
+}
+.todo-filters {
+    display: flex;
+}
+.todo-filters div:hover {
+    color: gray;
+}
+.selected {
+    color: red;
+}
