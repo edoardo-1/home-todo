@@ -48,4 +48,11 @@ export class TodoService {
       .filter((todo) => !todo.isCompleted);
     this.todos$.next(updatedTodos);
   }
+
+  deleteTodo(todoToDelete: Todo): void {
+    let updatedTodos: Todo[] = this.todos$
+      .getValue()
+      .filter((todo) => todo !== todoToDelete);
+    this.todos$.next(updatedTodos);
+  }
 }

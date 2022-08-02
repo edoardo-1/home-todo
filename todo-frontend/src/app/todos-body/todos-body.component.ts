@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Todo } from 'src/models/todo';
 import { TodoService } from 'src/services/todo.service';
 
 @Component({
@@ -6,11 +7,11 @@ import { TodoService } from 'src/services/todo.service';
   templateUrl: './todos-body.component.html',
   styleUrls: ['./todos-body.component.scss']
 })
-export class TodosBodyComponent implements OnInit {
+export class TodosBodyComponent {
 
   constructor(public todoService : TodoService) { }
 
-  ngOnInit(): void {
+  deleteTodo(todo : Todo) : void {
+    this.todoService.deleteTodo(todo);
   }
-
 }

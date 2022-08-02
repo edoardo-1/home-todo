@@ -1,7 +1,8 @@
-li span.delete-button {
+li .delete-button {
     visibility: hidden;
+    width: 20px;
 }
-li:hover span.delete-button {
+li:hover .delete-button {
     visibility: visible;
 }
 ul li {
