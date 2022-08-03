@@ -17,7 +17,7 @@ export class TodoService {
         _this.todos$.next(data);
       },
       error() {
-        throw new Error('Unable to get data from api !!!');
+        throw new Error('Unable to get data from api');
       },
     });
   }
@@ -49,7 +49,11 @@ export class TodoService {
   addNewTodo(newContent: string): void {
     let newId: number = ~~(Math.random() * 100000);
     let newTodo: Todo = { id: newId, content: newContent, isCompleted: false };
-    this.httpClient.post(this.url + 'api/todos', newTodo);
+    this.httpClient.post(this.url + '/api/todos', newTodo).subscribe({
+      error(err) {
+        throw new Error(err.message);
+      },
+    });
     this.todos$.next([...this.todos$.getValue(), newTodo]);
   }
 
