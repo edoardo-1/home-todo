@@ -9,7 +9,8 @@ namespace todo_backend.Controllers
         [HttpGet("getTodos")]
         public IActionResult GetTodos()
         {
-            return Ok(new { id = 1, content = "todo 1", isCompleted = false });
+            var todos = new object[] { new { id = 1, content = "todo 1", isCompleted = false } };
+            return Ok(todos);
         }
     }
 }

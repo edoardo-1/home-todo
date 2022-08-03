@@ -10,25 +10,29 @@ export class TodoService {
   public todos$ = new BehaviorSubject<Todo[]>([]);
 
   constructor(private httpClient: HttpClient) {
-    this.getTodos.subscribe((data) => this.todos$.next(data));
+    this.getTodos().subscribe((data) => this.todos$.next(data));
   }
 
   //refactor later to get data from api
-  public getTodos: Observable<Todo[]> = of([
-    {
-      id: 2,
-      content: 'todo1',
-      isCompleted: false,
-    },
-    {
-      id: 3,
-      content: 'todo1',
-      isCompleted: true,
-    },
-  ]);
+  // public getTodos: Observable<Todo[]> = of([
+  //   {
+  //     id: 2,
+  //     content: 'todo1',
+  //     isCompleted: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     content: 'todo1',
+  //     isCompleted: true,
+  //   },
+  // ]);
+
+  private getTodos(): Observable<Todo[]> {
+    return this.httpClient.get<Todo[]>('https://localhost:3000/api/getTodos');
+  }
 
   getAllTodos(): void {
-    this.getTodos.subscribe((data) => this.todos$.next(data));
+    this.getTodos().subscribe((data) => this.todos$.next(data));
   }
 
   displayUncompletedTodos(): void {
