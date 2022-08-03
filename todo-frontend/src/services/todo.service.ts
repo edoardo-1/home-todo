@@ -7,7 +7,8 @@ import { Todo } from 'src/models/todo';
   providedIn: 'root',
 })
 export class TodoService {
-  public todos$ = new BehaviorSubject<Todo[]>([]);
+  public todos$: BehaviorSubject<Todo[]> = new BehaviorSubject<Todo[]>([]);
+  private url: string = 'https://localhost:3000';
 
   constructor(private httpClient: HttpClient) {
     const _this = this;
@@ -22,7 +23,7 @@ export class TodoService {
   }
 
   private getTodosFromApi(): Observable<Todo[]> {
-    return this.httpClient.get<Todo[]>('https://localhost:3000/api/getTodos');
+    return this.httpClient.get<Todo[]>(this.url + '/api/todos');
   }
 
   getAllTodos(): void {
@@ -47,10 +48,9 @@ export class TodoService {
 
   addNewTodo(newContent: string): void {
     let newId: number = ~~(Math.random() * 100000);
-    this.todos$.next([
-      ...this.todos$.getValue(),
-      { id: newId, content: newContent, isCompleted: false },
-    ]);
+    let newTodo: Todo = { id: newId, content: newContent, isCompleted: false };
+    this.httpClient.post(this.url + 'api/todos', newTodo);
+    this.todos$.next([...this.todos$.getValue(), newTodo]);
   }
 
   completeAll(): void {

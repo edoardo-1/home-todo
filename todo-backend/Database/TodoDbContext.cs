@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 using todo_backend.Models;
 
 namespace todo_backend.Database
@@ -9,9 +10,6 @@ namespace todo_backend.Database
 
         public TodoDbContext(DbContextOptions options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Todo>().HasKey(t => t.Id);
-        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder){ }
     }
 }

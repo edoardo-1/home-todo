@@ -1,9 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using todo_backend.Database;
+using todo_backend.Services;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 
+builder.Services.AddScoped<TodoDbContext>();
+builder.Services.AddScoped<TodoService>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
@@ -13,7 +17,6 @@ builder.Services.AddCors(options =>
                           policy.WithOrigins("http://localhost:4200");
                       });
 });
-var config = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 builder.Services.AddDbContext<TodoDbContext>(builder =>
     builder.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
