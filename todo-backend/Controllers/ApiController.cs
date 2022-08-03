@@ -29,9 +29,23 @@ namespace todo_backend.Controllers
             {
                 TodoService.AddNewTodo(todo);
             }
-            catch (Exception ex)
+            catch
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, "Unable to save todo to database");
+            }
+            return Ok();
+        }
+
+        [HttpDelete("todos/{id}")]
+        public IActionResult DeleteTodo([FromRoute] int id)
+        {
+            try
+            {
+                TodoService.DeleteTodo(id);
+            }
+            catch
+            {
+                return StatusCode(500, "Unable to delete todo from database");
             }
             return Ok();
         }
