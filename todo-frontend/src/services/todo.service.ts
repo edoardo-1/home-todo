@@ -10,7 +10,15 @@ export class TodoService {
   public todos$ = new BehaviorSubject<Todo[]>([]);
 
   constructor(private httpClient: HttpClient) {
-    this.getTodos().subscribe((data) => this.todos$.next(data));
+    const _this = this;
+    this.getTodos().subscribe({
+      next(data) {
+        _this.todos$.next(data);
+      },
+      error() {
+        throw new Error('Unable to get data from api !!!');
+      },
+    });
   }
 
   //refactor later to get data from api
