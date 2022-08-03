@@ -5,28 +5,45 @@ namespace todo_backend.Services
 {
     public class TodoService
     {
-        private TodoDbContext Database { get; set; }
+        private TodoDbContext context { get; set; }
 
         public TodoService(TodoDbContext databse) {
-            Database = databse;
+            context = databse;
         }
         
         public Todo[] GetAllTodos()
         {
-            return Database.Todos.ToArray();
+            return context.Todos.ToArray();
         }
 
         public void AddNewTodo(Todo todo)
         {
-            Database.Todos.Add(todo);
-            Database.SaveChanges();
+            context.Todos.Add(todo);
+            context.SaveChanges();
         }
 
         public void DeleteTodo(int todoId)
         {
-            var todoToRemove = Database.Todos.FirstOrDefault(x => x.Id == todoId);
-            Database.Todos.Remove(todoToRemove);
-            Database.SaveChanges();
+            var todoToRemove = context.Todos.First(x => x.Id == todoId);
+            context.Todos.Remove(todoToRemove);
+            context.SaveChanges();
+        }
+
+        public void CompleteTodo(int todoId)
+        {
+            var todoToComplete = context.Todos.First(todo => todo.Id == todoId);
+            todoToComplete.IsCompleted = !todoToComplete.IsCompleted;
+            context.SaveChanges();
+        }
+
+        public void CompleteAllTodos()
+        {
+            var todosToUpdate = context.Todos.Select(x => x).Where(todo => todo.IsCompleted == false).ToList();
+            foreach (var todo in todosToUpdate)
+            {
+                todo.IsCompleted = true;
+            }
+            context.SaveChanges();
         }
     }
 }

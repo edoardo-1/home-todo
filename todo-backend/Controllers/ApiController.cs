@@ -22,7 +22,7 @@ namespace todo_backend.Controllers
             return Ok(todos);
         }
 
-        [HttpPost("todos")]
+        [HttpPost("todo")]
         public IActionResult AddNewTodo([FromBody] Todo todo)
         {
             try
@@ -31,12 +31,12 @@ namespace todo_backend.Controllers
             }
             catch
             {
-                return StatusCode(500, "Unable to save todo to database");
+                return StatusCode(500, new { error = "Unable to save todo to database" });
             }
             return Ok();
         }
 
-        [HttpDelete("todos/{id}")]
+        [HttpDelete("todo/{id}")]
         public IActionResult DeleteTodo([FromRoute] int id)
         {
             try
@@ -45,7 +45,35 @@ namespace todo_backend.Controllers
             }
             catch
             {
-                return StatusCode(500, "Unable to delete todo from database");
+                return StatusCode(500, new { error = "Unable to delete todo from database" });
+            }
+            return Ok();
+        }
+        
+        [HttpPut("todo/complete/{id}")]
+        public IActionResult CompleteTodo([FromRoute] int id)
+        {
+            try
+            {
+                TodoService.CompleteTodo(id);
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Unable to complete todo." });
+            }
+            return Ok();
+        }
+
+        [HttpPut("todos/complete")]
+        public IActionResult CompleteAllTodos()
+        {
+            try
+            {
+                TodoService.CompleteAllTodos();
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Unable to complete all todos" });
             }
             return Ok();
         }

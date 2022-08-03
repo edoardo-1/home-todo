@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Todo } from 'src/models/todo';
 
@@ -16,8 +16,8 @@ export class TodoService {
       next(data) {
         _this.todos$.next(data);
       },
-      error() {
-        throw new Error('Unable to get data from api');
+      error(err) {
+        throw new HttpErrorResponse(err);
       },
     });
   }
@@ -49,9 +49,9 @@ export class TodoService {
   addNewTodo(newContent: string): void {
     let newId: number = ~~(Math.random() * 100000);
     let newTodo: Todo = { id: newId, content: newContent, isCompleted: false };
-    this.httpClient.post(this.url + '/api/todos', newTodo).subscribe({
+    this.httpClient.post(this.url + '/api/todo', newTodo).subscribe({
       error(err) {
-        throw new Error(err.message);
+        throw new HttpErrorResponse(err);
       },
     });
     this.todos$.next([...this.todos$.getValue(), newTodo]);
@@ -60,6 +60,11 @@ export class TodoService {
   completeAll(): void {
     let updatedTodos: Todo[] = this.todos$.getValue().map((todo) => {
       return { ...todo, isCompleted: true };
+    });
+    this.httpClient.put(this.url + '/api/todos/complete', null).subscribe({
+      error(err) {
+        throw new HttpErrorResponse(err);
+      },
     });
     this.todos$.next(updatedTodos);
   }
@@ -76,7 +81,7 @@ export class TodoService {
       .getValue()
       .filter((todo) => todo !== todoToDelete);
     this.httpClient
-      .delete(this.url + '/api/todos/' + todoToDelete.id)
+      .delete(this.url + '/api/todo/' + todoToDelete.id)
       .subscribe({
         error(err) {
           throw new Error(err.message);
@@ -101,5 +106,12 @@ export class TodoService {
       .map((todo) =>
         todo === todoToComplete ? this.switchCompleted(todo) : todo
       );
+    this.httpClient
+      .put(this.url + '/api/todo/complete/' + todoToComplete.id, null)
+      .subscribe({
+        error(err) {
+          throw new Error(err.message);
+        },
+      });
   }
 }
