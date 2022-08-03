@@ -11,7 +11,7 @@ export class TodoService {
 
   constructor(private httpClient: HttpClient) {
     const _this = this;
-    this.getTodos().subscribe({
+    this.getTodosFromApi().subscribe({
       next(data) {
         _this.todos$.next(data);
       },
@@ -21,26 +21,12 @@ export class TodoService {
     });
   }
 
-  //refactor later to get data from api
-  // public getTodos: Observable<Todo[]> = of([
-  //   {
-  //     id: 2,
-  //     content: 'todo1',
-  //     isCompleted: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     content: 'todo1',
-  //     isCompleted: true,
-  //   },
-  // ]);
-
-  private getTodos(): Observable<Todo[]> {
+  private getTodosFromApi(): Observable<Todo[]> {
     return this.httpClient.get<Todo[]>('https://localhost:3000/api/getTodos');
   }
 
   getAllTodos(): void {
-    this.getTodos().subscribe((data) => this.todos$.next(data));
+    this.getTodosFromApi().subscribe((data) => this.todos$.next(data));
   }
 
   displayUncompletedTodos(): void {
