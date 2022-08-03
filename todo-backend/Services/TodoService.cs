@@ -38,11 +38,15 @@ namespace todo_backend.Services
 
         public void CompleteAllTodos()
         {
-            var todosToUpdate = context.Todos.Select(x => x).Where(todo => todo.IsCompleted == false).ToList();
-            foreach (var todo in todosToUpdate)
-            {
-                todo.IsCompleted = true;
-            }
+            var todosToComplete = context.Todos.Where(todo => !todo.IsCompleted).ToList();
+            todosToComplete.ForEach(todo => todo.IsCompleted = true);
+            context.SaveChanges();
+        }
+
+        public void DeleteCompletedTodos()
+        {
+            var todosToDelete = context.Todos.Where(todo => todo.IsCompleted).ToList();
+            todosToDelete.ForEach(todo => context.Todos.Remove(todo));
             context.SaveChanges();
         }
     }

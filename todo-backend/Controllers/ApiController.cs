@@ -77,5 +77,19 @@ namespace todo_backend.Controllers
             }
             return Ok();
         }
+
+        [HttpDelete("todos/completed")]
+        public IActionResult DeleteCompletedTodos()
+        {
+            try
+            {
+                TodoService.DeleteCompletedTodos();
+            }
+            catch
+            {
+                return StatusCode(500, new { error = "Unable to delete completed todos" });
+            }
+            return Ok();
+        }
     }
 }

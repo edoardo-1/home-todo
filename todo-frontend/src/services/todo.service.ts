@@ -73,6 +73,11 @@ export class TodoService {
     let updatedTodos: Todo[] = this.todos$
       .getValue()
       .filter((todo) => !todo.isCompleted);
+    this.httpClient.delete(this.url + '/api/todos/completed').subscribe({
+      error(err) {
+        throw new HttpErrorResponse(err);
+      },
+    });
     this.todos$.next(updatedTodos);
   }
 
