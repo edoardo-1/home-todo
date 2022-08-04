@@ -16,8 +16,9 @@ namespace todo_backend.Services
             return context.Todos.ToArray();
         }
 
-        public void AddNewTodo(Todo todo)
+        public void AddNewTodo(string content)
         {
+            var todo = new Todo() { Content = content, IsCompleted = false};
             context.Todos.Add(todo);
             context.SaveChanges();
         }

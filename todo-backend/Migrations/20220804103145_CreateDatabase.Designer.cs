@@ -11,8 +11,8 @@ using todo_backend.Database;
 namespace todo_backend.Migrations
 {
     [DbContext(typeof(TodoDbContext))]
-    [Migration("20220803111334_GenerateDatabase")]
-    partial class GenerateDatabase
+    [Migration("20220804103145_CreateDatabase")]
+    partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,10 @@ namespace todo_backend.Migrations
             modelBuilder.Entity("todo_backend.Models.Todo", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Content")
                         .IsRequired()

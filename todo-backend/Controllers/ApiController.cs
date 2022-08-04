@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using todo_backend.Models;
 using todo_backend.Services;
 
@@ -27,13 +26,13 @@ namespace todo_backend.Controllers
         {
             try
             {
-                TodoService.AddNewTodo(todo);
+                TodoService.AddNewTodo(todo.Content);
             }
             catch
             {
-                return StatusCode(500, new { error = "Unable to save todo to database" });
+                return StatusCode(500, new { error = "Unable to save todo to database." });
             }
-            return Ok();
+            return Ok( new { message = "Database updated successfully." });
         }
 
         [HttpDelete("todo/{id}")]
@@ -47,7 +46,7 @@ namespace todo_backend.Controllers
             {
                 return StatusCode(500, new { error = "Unable to delete todo from database" });
             }
-            return Ok();
+            return Ok( new { message = "Database updated successfully." });
         }
         
         [HttpPut("todo/complete/{id}")]
@@ -61,7 +60,7 @@ namespace todo_backend.Controllers
             {
                 return StatusCode(500, new { error = "Unable to complete todo." });
             }
-            return Ok();
+            return Ok( new { message = "Database updated successfully." });
         }
 
         [HttpPut("todos/complete")]
@@ -75,7 +74,7 @@ namespace todo_backend.Controllers
             {
                 return StatusCode(500, new { error = "Unable to complete all todos" });
             }
-            return Ok();
+            return Ok( new { message = "Database updated successfully." });
         }
 
         [HttpDelete("todos/completed")]
@@ -89,7 +88,7 @@ namespace todo_backend.Controllers
             {
                 return StatusCode(500, new { error = "Unable to delete completed todos" });
             }
-            return Ok();
+            return Ok(new { message = "Database updated successfully." });
         }
     }
 }

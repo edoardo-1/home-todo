@@ -15,7 +15,6 @@ export class TodoService {
 
   constructor(private httpClient: HttpClient) {
     this.updateAllTodos();
-    console.warn('hello from construcotr');
     this.filteredTodos$ = 
     combineLatest([this.allTodos$,this.toDisplay$])
     .pipe(
@@ -43,11 +42,8 @@ export class TodoService {
     this.toDisplay$.next(filter);
   }
 
-  //refactor later without id
-  addNewTodo(newContent: string): void {
-    let newId: number = ~~(Math.random() * 100000);
-    let newTodo: Todo = { id: newId, content: newContent, isCompleted: false };
-    this.httpClient.post(this.apiUrl + '/api/todo', newTodo)
+  addNewTodo(content: string): void {
+    this.httpClient.post(this.apiUrl + '/api/todo', { content })
     .pipe(tap(() => {this.updateAllTodos()}))
     .subscribe();
   }
