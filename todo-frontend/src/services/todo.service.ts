@@ -16,10 +16,9 @@ export class TodoService {
   constructor(private httpClient: HttpClient) {
     this.updateAllTodos();
     console.warn('hello from construcotr');
-    this.filteredTodos$ = combineLatest(
-      this.allTodos$,
-      this.toDisplay$
-    ).pipe(
+    this.filteredTodos$ = 
+    combineLatest([this.allTodos$,this.toDisplay$])
+    .pipe(
       map(([todos, filter]: [Todo[], ToDisplay]) => {
         if (filter === ToDisplay.uncompleted) {
           return todos.filter((todo) => !todo.isCompleted);
