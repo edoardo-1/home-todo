@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Todo } from 'src/models/todo';
 import { TodoService } from 'src/services/todo.service';
 
@@ -9,10 +9,10 @@ import { TodoService } from 'src/services/todo.service';
   styleUrls: ['./todos-body.component.scss'],
 })
 export class TodosBodyComponent {
-  todos$: BehaviorSubject<Todo[]>;
+  todos$: Observable<Todo[]>;
 
   constructor(public todoService: TodoService) {
-    this.todos$ = todoService.todos$;
+    this.todos$ = todoService.filteredTodos$;
   }
 
   deleteTodo(todo: Todo): void {

@@ -1,119 +1,123 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, Observable, of, map } from 'rxjs';
 import { Todo } from 'src/models/todo';
+import { ToDisplay } from 'src/models/toDisplay';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  public todos$: BehaviorSubject<Todo[]> = new BehaviorSubject<Todo[]>([]);
-  private url: string = 'https://localhost:3000';
+  private apiUrl: string = 'https://localhost:3000';
+  private allTodos$ = new BehaviorSubject<Todo[]>([]);
+  public filteredTodos$ = new Observable<Todo[]>;
+  public toDisplay$ = new BehaviorSubject<ToDisplay>(ToDisplay.all);
 
   constructor(private httpClient: HttpClient) {
-    const _this = this;
-    this.getTodosFromApi().subscribe({
-      next(data) {
-        _this.todos$.next(data);
-      },
-      error(err) {
-        throw new HttpErrorResponse(err);
-      },
-    });
+    this.updateAllTodos();
+    console.warn('hello from construcotr');
+    this.filteredTodos$ = combineLatest(
+      this.allTodos$,
+      this.toDisplay$
+    ).pipe(
+      map(([todos, filter]: [Todo[], ToDisplay]) => {
+        if (filter === ToDisplay.uncompleted) {
+          return todos.filter((todo) => !todo.isCompleted);
+        } else if (filter === ToDisplay.completed) {
+          return todos.filter(todo => todo.isCompleted)
+        }
+        return todos;
+      })
+    )
   }
 
   private getTodosFromApi(): Observable<Todo[]> {
-    return this.httpClient.get<Todo[]>(this.url + '/api/todos');
+    return this.httpClient.get<Todo[]>(this.apiUrl + '/api/todos');
   }
 
-  getAllTodos(): void {
-    this.getTodosFromApi().subscribe((data) => this.todos$.next(data));
+  private updateAllTodos(): void {
+    let _this = this;
+    this.getTodosFromApi().subscribe({
+      next(data) {
+        _this.allTodos$.next(data);
+      },
+      error(err) {
+        throw new HttpErrorResponse(err);
+      },
+    });
   }
 
-  displayUncompletedTodos(): void {
-    this.getAllTodos();
-    let updatedTodos = this.todos$
-      .getValue()
-      .filter((todo) => !todo.isCompleted);
-    this.todos$.next(updatedTodos);
+  switchFilter(filter : ToDisplay) : void {
+    this.toDisplay$.next(filter);
   }
 
-  displayCompletedTodos(): void {
-    this.getAllTodos();
-    let updatedTodos = this.todos$
-      .getValue()
-      .filter((todo) => todo.isCompleted);
-    this.todos$.next(updatedTodos);
-  }
-
+  //refactor later without id
   addNewTodo(newContent: string): void {
     let newId: number = ~~(Math.random() * 100000);
     let newTodo: Todo = { id: newId, content: newContent, isCompleted: false };
-    this.httpClient.post(this.url + '/api/todo', newTodo).subscribe({
+    let _this = this;
+    this.httpClient.post(this.apiUrl + '/api/todo', newTodo).subscribe({
+      next() {
+        _this.updateAllTodos();
+      },
       error(err) {
         throw new HttpErrorResponse(err);
       },
     });
-    this.todos$.next([...this.todos$.getValue(), newTodo]);
   }
 
   completeAll(): void {
-    let updatedTodos: Todo[] = this.todos$.getValue().map((todo) => {
-      return { ...todo, isCompleted: true };
-    });
-    this.httpClient.put(this.url + '/api/todos/complete', null).subscribe({
+    let _this = this;
+    this.httpClient.put(this.apiUrl + '/api/todos/complete', null).subscribe({
+      next() {
+        _this.updateAllTodos();
+      },
       error(err) {
         throw new HttpErrorResponse(err);
       },
     });
-    this.todos$.next(updatedTodos);
   }
 
   clearCompleted(): void {
-    let updatedTodos: Todo[] = this.todos$
-      .getValue()
-      .filter((todo) => !todo.isCompleted);
-    this.httpClient.delete(this.url + '/api/todos/completed').subscribe({
+    let _this = this;
+    this.httpClient.delete(this.apiUrl + '/api/todos/completed').subscribe({
+      next() {
+        _this.updateAllTodos();
+      },
       error(err) {
         throw new HttpErrorResponse(err);
       },
     });
-    this.todos$.next(updatedTodos);
   }
 
   deleteTodo(todoToDelete: Todo): void {
-    let updatedTodos: Todo[] = this.todos$
-      .getValue()
-      .filter((todo) => todo !== todoToDelete);
+    let _this = this;
     this.httpClient
-      .delete(this.url + '/api/todo/' + todoToDelete.id)
+      .delete(this.apiUrl + '/api/todo/' + todoToDelete.id)
       .subscribe({
+        next() {
+          _this.updateAllTodos();
+        },
         error(err) {
-          throw new Error(err.message);
+          throw new HttpErrorResponse(err);
         },
       });
-    this.todos$.next(updatedTodos);
   }
 
   countUncompletedTasks(): number {
     return (
-      this.todos$.getValue().filter((task) => !task.isCompleted).length || 0
+      this.allTodos$.getValue().filter((task) => !task.isCompleted).length || 0
     );
   }
 
-  private switchCompleted(todo: Todo): void {
-    todo.isCompleted = !todo.isCompleted;
-  }
-
   completeTodo(todoToComplete: Todo): void {
-    this.todos$
-      .getValue()
-      .map((todo) =>
-        todo === todoToComplete ? this.switchCompleted(todo) : todo
-      );
+    let _this = this;
     this.httpClient
-      .put(this.url + '/api/todo/complete/' + todoToComplete.id, null)
+      .put(this.apiUrl + '/api/todo/complete/' + todoToComplete.id, null)
       .subscribe({
+        next() {
+          _this.updateAllTodos();
+        },
         error(err) {
           throw new Error(err.message);
         },

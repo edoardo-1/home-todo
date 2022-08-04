@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Todo } from 'src/models/todo';
+import { Observable } from 'rxjs';
+import { ToDisplay } from 'src/models/toDisplay';
 import { TodoService } from 'src/services/todo.service';
 
 @Component({
@@ -9,34 +9,15 @@ import { TodoService } from 'src/services/todo.service';
   styleUrls: ['./todos-footer.component.scss'],
 })
 export class TodosFooterComponent {
-  todos$: BehaviorSubject<Todo[]>;
-  allFilter: string = 'selected';
-  uncompletedFilter: string = '';
-  completedFilter: string = '';
+  ToDisplay = ToDisplay;
+  $toDisplay: Observable<ToDisplay>;
 
   constructor(private todoService: TodoService) {
-    this.todos$ = todoService.todos$;
+    this.$toDisplay = todoService.toDisplay$;
   }
 
-  getAllTodos(): void {
-    this.allFilter = 'selected';
-    this.completedFilter = '';
-    this.uncompletedFilter = '';
-    this.todoService.getAllTodos();
-  }
-
-  displayUncompletedTodos(): void {
-    this.allFilter = '';
-    this.completedFilter = '';
-    this.uncompletedFilter = 'selected';
-    this.todoService.displayUncompletedTodos();
-  }
-
-  displayCompletedTodos() {
-    this.allFilter = '';
-    this.completedFilter = 'selected';
-    this.uncompletedFilter = '';
-    this.todoService.displayCompletedTodos();
+  switchFilter(filter: ToDisplay): void {
+    this.todoService.switchFilter(filter);
   }
 
   showTasksLeft(): string {

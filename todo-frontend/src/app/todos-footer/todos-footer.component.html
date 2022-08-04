@@ -1,6 +1,7 @@
 <div>{{showTasksLeft()}}</div>
 <div class="todo-filters">
-    <div [class]="allFilter" (click)="getAllTodos()">All</div>
-    <div [class]="uncompletedFilter" (click)="displayUncompletedTodos()">Uncompleted</div>
-    <div [class]="completedFilter" (click)="displayCompletedTodos()">Completed</div>
+    <div [ngClass]="{selected: ($toDisplay | async) === ToDisplay.all}" (click)="switchFilter(ToDisplay.all)">All</div>
+    <div [ngClass]="{selected: ($toDisplay | async) === ToDisplay.uncompleted}" (click)="switchFilter(ToDisplay.uncompleted)">Uncompleted</div>
+    <div [ngClass]="{selected: ($toDisplay | async) === ToDisplay.completed}" (click)="switchFilter(ToDisplay.completed)">Completed</div>
 </div>
+ 
