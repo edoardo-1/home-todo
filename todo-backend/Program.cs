@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using todo_backend.Database;
 using todo_backend.Services;
 
@@ -19,8 +20,12 @@ builder.Services.AddCors(options =>
                           policy.AllowAnyMethod();
                       });
 });
+var conn = new NpgsqlConnection(config.GetConnectionString("DefaultConnection"));
+
 builder.Services.AddDbContext<TodoDbContext>(builder =>
-    builder.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+    builder.UseNpgsql(conn));
+    //builder.UseSqlServer(config.GetConnectionString("DefaultConnection"))
+   
 
 var app = builder.Build();
 
